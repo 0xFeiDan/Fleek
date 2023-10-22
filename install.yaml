@@ -1,0 +1,22 @@
+- name: 二进制直接后台运行lgtn
+  hosts: all
+  become: true
+
+  tasks:
+    - name: 创建/server目录
+      file:
+        path: /server
+        state: directory
+        mode: 0777
+
+    - name: 拷贝 lgtn 文件到主机
+      copy:
+        src: lgtn
+        dest: /server/lgtn
+        mode: 0755
+
+    - name: 创建key
+      : /server/lgtn keys generate
+
+    - name: 后台运行lgtn
+      shell: nohup lgtn -c ~/.lightning/config.toml run &
